@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+transformers
+torch
+torchvision
+torchaudio
+fastapi-cors
+numpy 
+pandas
+scikit-learn

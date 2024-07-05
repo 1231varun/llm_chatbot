@@ -1,0 +1,8 @@
+[
+    {"context": "Hello! How can I help you today?", "response": "Hi! I'm looking for information on your services."},
+    {"context": "Sure, what do you need help with?", "response": "Can you tell me more about your pricing plans?"},
+    {"context": "We offer several pricing plans based on your needs.", "response": "That's great! Can you send me the details?"},
+    {"context": "Of course! I'll send you the details shortly.", "response": "Thank you!"},
+    {"context": "You're welcome! Is there anything else you need?", "response": "No, that's all for now."},
+    {"context": "Alright. Have a great day!", "response": "You too! Bye."}
+]
