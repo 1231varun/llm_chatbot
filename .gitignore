@@ -2,3 +2,4 @@ node_modules/
 venv/
 my_combined_gpt2_model/
 combined_preprocessed_data.pkl
+__pycache__/

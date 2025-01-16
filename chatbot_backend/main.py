@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from fastapi.middleware.cors import CORSMiddleware
 import torch
 import os
@@ -16,34 +16,30 @@ app.add_middleware(
 )
 
 # Load your trained model and tokenizer
-model_path = "llm/my_combined_gpt2_model"
+model_path = "llm/my_combined_gpt2_model"  # Adjusted path
 if not os.path.exists(model_path):
     raise ValueError(f"Model path '{model_path}' does not exist")
 
-model = GPT2LMHeadModel.from_pretrained(model_path)
-tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(model_path, local_files_only=True)
+tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
 
 class Prompt(BaseModel):
     prompt: str
 
 @app.post("/chat")
 async def chat(prompt: Prompt):
-    inputs = tokenizer.encode(prompt.prompt + tokenizer.eos_token, return_tensors="pt")
-    attention_mask = (inputs != tokenizer.pad_token_id).long()
-    
+    inputs = tokenizer.encode(f"<USER> {prompt.prompt} <BOT>", return_tensors="pt")
     outputs = model.generate(
-        inputs, 
-        attention_mask=attention_mask,
+        inputs,
         max_length=50,
         pad_token_id=tokenizer.pad_token_id,
-        top_p=0.9,  # Nucleus sampling
-        top_k=0,  # Disable top-k sampling
-        temperature=0.7,  # Add temperature to control randomness
-        repetition_penalty=1.2,  # Penalty to avoid repetition
+        top_p=0.9,
+        top_k=50,
+        temperature=0.7,
+        repetition_penalty=1.5,
         num_return_sequences=1,
-        eos_token_id=tokenizer.eos_token_id
+        eos_token_id=tokenizer.eos_token_id,
     )
-    
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return {"response": response}
 

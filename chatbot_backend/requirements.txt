@@ -8,3 +8,4 @@ fastapi-cors
 numpy 
 pandas
 scikit-learn
+datasets
